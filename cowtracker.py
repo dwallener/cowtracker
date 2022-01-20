@@ -60,7 +60,7 @@ def distort_background(image_name):
 img_mid = cv2.imread('images/barrel-distort-mid.png')
 
 # now concatenate and display as one image
-test_concatenation = 1
+test_concatenation = 0
 img_concatenate = np.concatenate((img_left, img_mid, img_right), axis=1)
 pil_img_concatenate = Image.new('RGB', size=(img_concatenate.shape[0], img_concatenate.shape[1]))
 
@@ -80,65 +80,40 @@ def add_cow_cv2(image_name, location, cow_size):
     # angle, angle start, angle end
     # color, in RGB truple
     # thickeness (we want it full)
-    return_image = cv2.ellipse(image_name, location, cow_size, 0, 0, 360, (0x11, 0x11, 0x55), cow_size[1])
+    starting_img = image_name
+    return_image = cv2.ellipse(starting_img, location, cow_size, 0, 0, 360, (0x11, 0x11, 0x55), cow_size[1])
     return return_image
-
-def add_cow_pil(image_name, location, cow_size):
-    x, y = location[0], location[1]
-    ex, ey = cow_size[0], cow_size[1]
-    bbox = (x, y, x+ex, y+ey)
-    draw = ImageDraw.Draw(image_name)
-    draw.ellipse(bbox, fill=0x551111)
-    del draw
-    return_image = image_name
 
 cow_size = (50,25)
 
-test_single_cow = 1
+test_single_cow = 0
 if test_single_cow == 1:
+    img_concatenate = np.concatenate((img_left, img_mid, img_right), axis=1)
     img_with_cow = add_cow_cv2(img_concatenate, (50, 640), cow_size)
     cv2.imshow('frame1',img_with_cow)
     cv2.waitKey(0)
     cv2.destroyWindow('frame1')
-    cv2.waitKey(1)
 
+    img_concatenate = np.concatenate((img_left, img_mid, img_right), axis=1)
     img_with_cow2 = add_cow_cv2(img_concatenate, (100, 640), cow_size)
     cv2.imshow('frame2',img_with_cow2)
     cv2.waitKey(0)
     cv2.destroyWindow('frame2')
-    cv2.waitKey(1)
 
+    img_concatenate = np.concatenate((img_left, img_mid, img_right), axis=1)
     img_with_cow3 = add_cow_cv2(img_concatenate, (150, 640), cow_size)
     cv2.imshow('frame3',img_with_cow3)
     cv2.waitKey(0)
     cv2.destroyWindow('frame3')
-    cv2.waitKey(1)
-
-    # let's try this with the PIL library
-    pil_image = cv2pil(img_concatenate)
-    pil_image.show()
-    pil1 = add_cow_pil(pil_image, (50, 640), cow_size)
-    pil1.show()
-    input("...")
-    pil2 = add_cow_pil(pil_image, (100, 640), cow_size)
-    pil2.show()
-    input("...")
-    pil3 = add_cow_pil(pil_image, (150, 640), cow_size)
-    pil3.show()
-    input("...")
-
-
-exit()
 
 # this just moves things horizontally for now
 # img_name in this usage holds the background canvas
 def create_cow_movie_cv2(img_name, starting_location, direction, speed):
-    cv2.destroyAllWindows()
     xy = (starting_location[0], starting_location[1])
     iteration = 100
     while xy[0] < img_width:
-        img_with_cow = []
-        img_with_cow = add_cow_cv2(img_name, xy, cow_size)
+        img_concatenate = np.concatenate((img_left, img_mid, img_right), axis=1)
+        img_with_cow = add_cow_cv2(img_concatenate, xy, cow_size)
         cv2.imshow("Cow",img_with_cow)
         cv2.waitKey(0)
         cv2.destroyWindow("Cow")
